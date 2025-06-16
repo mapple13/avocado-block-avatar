@@ -1,60 +1,68 @@
-{{/* Hugo Blox: Hero */}}
-{{/* Documentation: https://hugoblox.com/blocks/ */}}
-{{/* License: https://github.com/HugoBlox/hugo-blox-builder/blob/main/LICENSE.md */}}
+{{/* My Custom Hugo Blox Intro Block */}}
+{{/* https://hugoblox.com */}}
 
-{{/* Initialise */}}
 {{ $page := .wcPage }}
 {{ $block := .wcBlock }}
-<div class="relative isolate px-6 pt-14 lg:px-8">
 
-  <div class="mx-auto max-w-2xl {{if not ($block.design.no_padding | default false) }}py-32 sm:py-48 lg:py-56{{end}}">
+{{/* Content fields */}}
+{{ $name := $block.content.name | default "Your Name" }}
+{{ $title := $block.content.title }}
+{{ $affiliation := $block.content.affiliation }}
+{{ $affiliation_url := $block.content.affiliation_url }}
+{{ $email := $block.content.email }}
+{{ $avatar := $block.content.avatar | default "/authors/admin/avatar.jpg" }}
+{{ $bio := $block.content.bio | $page.RenderString }}
+{{ $linkedin := $block.content.linkedin }}
 
-    {{ if $block.content.announcement.text }}
-    {{ $announcement := $block.content.announcement }}
-    <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-      <div class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 dark:text-gray-300 ring-1 ring-gray-900/10 dark:ring-gray-300 hover:ring-gray-900/20 dark:hover:ring-gray-400">
-        {{$announcement.text | markdownify}} {{if $announcement.link.text}}<a href="{{$announcement.link.url}}" class="font-semibold text-primary-600 dark:text-primary-300"><span class="absolute inset-0" aria-hidden="true"></span>{{$announcement.link.text}} <span aria-hidden="true">&rarr;</span></a>{{end}}
-      </div>
-    </div>
-    {{end}}
+<section id="section-resume-biography" class="relative hbb-section blox-resume-biography" style="padding: 2rem 0;">
+  <div class="home-section-bg"></div>
 
-    <div class="text-center">
-      {{ with $block.content.title }}<h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-6xl">{{ . | markdownify }}</h1>{{end}}
-      {{ with $block.content.text }}<p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">{{ . | $page.RenderString | emojify }}</p>{{end}}
+  <div class="flex flex-col items-center justify-center text-center px-4 py-16 bg-[#FFFDF6] text-gray-800">
 
-      {{ if $block.content.primary_action.url }}
-        {{ $link := $block.content.primary_action.url }}
-        {{ $scheme := (urls.Parse $link).Scheme }}
-        {{ $target := "" }}
-        {{ if not $scheme }}
-          {{ $link = $link | relLangURL }}
-        {{ else if in (slice "http" "https") $scheme }}
-          {{ $target = "target=\"_blank\" rel=\"noopener\"" }}
+    <!-- Avatar -->
+    <img class="avatar avatar-circle" width="1200" height="1200" src="{{ $avatar }}" alt="{{ $name }}">
+
+    <!-- Name -->
+    <h1 class="text-2xl font-semibold text-gray-900 mb-2">{{ $name }}</h1>
+
+    <!-- Title -->
+    {{ with $title }}
+      <h3 class="font-semibold mb-1">{{ . }}</h3>
+    {{ end }}
+
+    <!-- Affiliation -->
+    {{ with $affiliation }}
+      <div class="mb-2">
+        {{ if $affiliation_url }}
+          <a href="{{ $affiliation_url }}" target="_blank" rel="noopener">
+            <div>{{ . }}</div>
+          </a>
+        {{ else }}
+          <div>{{ . }}</div>
         {{ end }}
-      <div class="mt-10 flex items-center justify-center gap-x-6">
-        <a href="{{ $link | safeURL }}" {{ $target | safeHTMLAttr }} class="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
-          {{ $block.content.primary_action.text | markdownify | emojify }}
-          {{ with $block.content.primary_action.icon }}
-            {{ partial "functions/get_icon" (dict "name" . "attributes" "style=\"height: 1em\" class='inline-block pl-2'") }}
-          {{ end }}
-        </a>
-        {{end}}
-
-        {{ if $block.content.secondary_action.url }}
-          {{ $link_alt := $block.content.secondary_action.url }}
-          {{ $scheme_alt := (urls.Parse $link_alt).Scheme }}
-          {{ $target_alt := "" }}
-          {{ if not $scheme_alt }}
-            {{ $link_alt = $link_alt | relLangURL }}
-          {{ else if in (slice "http" "https") $scheme_alt }}
-            {{ $target_alt = "target=\"_blank\" rel=\"noopener\"" }}
-          {{ end }}
-        <a href="{{ $link_alt | safeURL }}" {{ $target_alt | safeHTMLAttr }} class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100 hover:dark:text-gray-200 hover:text-gray-800">{{ $block.content.secondary_action.text | markdownify | emojify }} <span aria-hidden="true">→</span></a>
-      {{end}}
-
       </div>
+    {{ end }}
 
-    </div>
+    <!-- Email -->
+    {{ with $email }}
+      <h4 class="font-semibold mb-1">{{ . }}</h4>
+    {{ end }}
+
+    <!-- Socials -->
+    <ul class="network-icon dark:text-zinc-100">
+      {{ with $linkedin }}
+        <li>
+          <a href="{{ . }}" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg style="height: 1.5rem;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+          </a>
+        </li>
+      {{ end }}
+    </ul>
+
+    <!-- Bio -->
+    {{ with $bio }}
+      <p class="text-lg text-gray-700 leading-relaxed py-2">{{ . }}</p>
+    {{ end }}
+
   </div>
-
-</div>
+</section>
